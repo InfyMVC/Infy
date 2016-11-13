@@ -1,7 +1,4 @@
 <?php
-
-$loader = require '../vendor/autoload.php';
-
 define("INFY_RUN", true);
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext)
@@ -30,36 +27,6 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext)
         }
     }
 }, E_ALL);
-
-$paths = array('infy' => '../infy/Infy.php', 'config' => '../app/config/config.php', 'routes' => '../app/config/routes.php', 'database' => '../app/config/database.php');
-
-$config   = null;
-$routes   = null;
-$database = null;
-
-foreach ($paths as $entryName => $path)
-{
-    switch ($entryName)
-    {
-        case "config":
-            $config = include_once $path;
-            break;
-        case "routes":
-            $routes = include_once $path;
-            break;
-        case "database":
-            $database = include $path;
-            break;
-        default:
-            include_once $path;
-            break;
-    }
-}
-
-if ($config["useRouter"])
-{
-    include_once '../infy/web/routing/InfyRouter.php';
-}
 
 if (array_key_exists('errors', $GLOBALS) && count($GLOBALS['errors']) !== 0)
 {
@@ -114,6 +81,9 @@ if (array_key_exists('errors', $GLOBALS) && count($GLOBALS['errors']) !== 0)
     die();
 }
 
+$config = include_once "../app/config/config.php";
+$database = include_once "../app/config/database.php";
+$routes = include_once "../app/config/routes.php";
 
 $infy = new \Infy\Infy($config, $database, $routes);
 $infy->run();

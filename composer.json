@@ -9,6 +9,11 @@
       "email": "yannickfricke@googlemail.com"
     }
   ],
+  "autoload": {
+    "psr-0": {
+      "Infy": "src/"
+    }
+  },
   "require": {
     "psy/psysh": "@stable"
   }
