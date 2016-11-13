@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteBase /InfyRewrite/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]

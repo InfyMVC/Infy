@@ -1,0 +1,15 @@
+{
+  "name": "infy/infymvc",
+  "description": "The extended easy to use MVC-Framework",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Yannick Fricke",
+      "email": "yannickfricke@googlemail.com"
+    }
+  ],
+  "require": {
+    "psy/psysh": "@stable"
+  }
+}
