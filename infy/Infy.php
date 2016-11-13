@@ -60,7 +60,7 @@ class Infy
         $this->infyRouter->match();
     }
 
-    private function scanForControllers($controllerDirectory)
+    public function scanForControllers($controllerDirectory)
     {
 
         $objects = scandir($controllerDirectory);
