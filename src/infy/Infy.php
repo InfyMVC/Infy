@@ -1,24 +1,29 @@
 <?php
-namespace Infy;
+
+namespace infy;
 
 use Exception;
 use infy\web\routing\InfyRouter;
 
 class Infy
 {
+
     private static $instance;
     private $config;
     private $databaseConfig;
     private $routes;
     private $infyRouter;
     private $settings;
+    private $htAccessFile;
 
-    function __construct($config, $databaseConfig, $routes) {
-        $this->config = $config;
+    function __construct($config, $databaseConfig, $routes, $htAccessFile)
+    {
+        $this->config         = $config;
         $this->databaseConfig = $databaseConfig;
-        $this->routes = $routes;
-        $this->infyRouter = new InfyRouter();
-        $this->instance = $this;
+        $this->routes         = $routes;
+        $this->infyRouter     = new InfyRouter();
+        $this->htAccessFile   = $htAccessFile;
+        $this->instance       = $this;
     }
 
     public function run()
@@ -38,20 +43,28 @@ class Infy
             throw new Exception("You need to define the routes", 1);
         }
 
-        $this->mapRoutes();
-
-        $htAccessFile = file_get_contents("../public/.htaccess");
-        $matches = array();
-        preg_match("/RewriteBase (?<basepath>.*)\r\n/", $htAccessFile, $matches);
-
-        $basepath = str_replace(array("\n", "\r", "\r\n"), "", $matches["basepath"]);
-
-        if (substr($basepath, strlen($basepath) -1) !== "/")
+        if (!isset($this->htAccessFile) || $this->htAccessFile == NULL)
         {
-            $basepath .= "/";
+            // TODO: Call log to not use basepath from htaccess file
         }
 
-        $this->infyRouter->setBasePath($basepath);
+        $this->mapRoutes();
+
+        if (isset($this->htAccessFile) && $this->htAccessFile != NULL && is_string($this->htAccessFile))
+        {
+            $htAccessFile = file_get_contents($this->htAccessFile);
+            $matches      = array();
+            preg_match("/RewriteBase (?<basepath>.*)\r\n/", $htAccessFile, $matches);
+
+            $basepath = str_replace(array("\n", "\r", "\r\n"), "", $matches["basepath"]);
+
+            if (substr($basepath, strlen($basepath) - 1) !== "/")
+            {
+                $basepath .= "/";
+            }
+
+            $this->infyRouter->setBasePath($basepath);
+        }
 
         $controllerDirectory = "../app/controller/";
         $this->scanForControllers($controllerDirectory);
@@ -103,4 +116,5 @@ class Infy
     {
         return self::$instance;
     }
+
 }
